@@ -4,11 +4,11 @@ using namespace boost::asio;
 namespace myserial
 {
 	/*
-		Í¨ĞÅĞ­Òé£º{0x55,0x5a,ÏßËÙ¶È£¨4Î»£©,½ÇËÙ¶È(4Î»)£¬0x0a}
+		é€šä¿¡åè®®ï¼š{0x55,0x5a,çº¿é€Ÿåº¦ï¼ˆ4ä½ï¼‰,è§’é€Ÿåº¦(4ä½)ï¼Œ0x0a}
 	*/
-	const unsigned char header[2] = {0x55,0x5A}; //±¨Í·
-	const unsigned char ender[1] = { 0x0A };	//±¨Î²
-	// union ·½±ã·¢ËÍ
+	const unsigned char header[2] = {0x55,0x5A}; //æŠ¥å¤´
+	const unsigned char ender[1] = { 0x0A };	//æŠ¥å°¾
+	// union æ–¹ä¾¿å‘é€
 	union send_msg
 	{
 		int d;
@@ -16,7 +16,7 @@ namespace myserial
 	}send_liner_x,send_angele_y;
 
 	io_service iosev;
-	serial_port sp(iosev,"COM1"); //´ò¿ªCOM1¿Ú
+	serial_port sp(iosev,"COM1"); //æ‰“å¼€COM1å£
 
 	myserial::myserial()
 	{
@@ -26,27 +26,27 @@ namespace myserial
 	}
 	bool myserial::init()
 	{
-		//²ÎÊıÉèÖÃ
-		sp.set_option(serial_port::baud_rate(9600)); //²¨ÌØÂÊ
+		//å‚æ•°è®¾ç½®
+		sp.set_option(serial_port::baud_rate(19200)); //æ³¢ç‰¹ç‡
 		sp.set_option(serial_port::flow_control(serial_port::flow_control::none));
-		sp.set_option(serial_port::parity(serial_port::parity::none));//ÎŞÆæÅ¼Ğ£ÑéÎ»
-		sp.set_option(serial_port::stop_bits(serial_port::stop_bits::one));//Ò»¸öÍ£Ö¹Î»
-		sp.set_option(serial_port::character_size(8));//×Ö³¤
+		sp.set_option(serial_port::parity(serial_port::parity::none));//æ— å¥‡å¶æ ¡éªŒä½
+		sp.set_option(serial_port::stop_bits(serial_port::stop_bits::one));//ä¸€ä¸ªåœæ­¢ä½
+		sp.set_option(serial_port::character_size(8));//å­—é•¿
 		return true;
 	}
-	//·¢ËÍ´®¿Ú
+	//å‘é€ä¸²å£
 	void myserial::send_data(int liner_x, int angle_y)
 	{
 		unsigned char buf[11] = { 0 };
 		send_liner_x.d = liner_x;
 		send_angele_y.d = angle_y;
-		//±¨Í·
+		//æŠ¥å¤´
 		for (int i = 0; i < 2; i++)
 		{
 			buf[i] = header[i];
 		}
-		//ÏßËÙ¶È£¬½ÇËÙ¶È
-		//Êı¾İ´Ó¸ßµ½µÍ
+		//çº¿é€Ÿåº¦ï¼Œè§’é€Ÿåº¦
+		//æ•°æ®ä»é«˜åˆ°ä½
 		int j = 3;
 		for (int i = 0;i<4;i++)
 		{
@@ -54,7 +54,7 @@ namespace myserial
 			buf[i + 6] = send_angele_y.data[j];
 			j--;
 		}
-		//±¨Î²
+		//æŠ¥å°¾
 		buf[10] = ender[0];
 		write(sp,buffer(buf));
 	}
