@@ -1,0 +1,10 @@
+# set the udev rule , make the device_port be fixed by ls-stm32
+#
+# KERNEL:内核 "ttyUSB*"：USB
+# ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523" 唯一属性判断;可通过 lsusb查看
+# ID idVendor：idProduct
+# MODE:="0666"：设置权限
+# SYMLINK+="stm32：设置链接。配置成功后可直接使用/dev/stm32对串口进行操作
+# 通过 ll /dev |grep ttyUSB 查看是否修改成功
+# 文件放在 /etc/udev/rules.d 下重启生效
+KERNEL=="ttyUSB*", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523",MODE:="777", SYMLINK+="stm32"
